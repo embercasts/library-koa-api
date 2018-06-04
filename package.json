@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js",
+    "db:create": "sequelize-esm db:create"
   },
   "dependencies": {
     "@koa/cors": "^2.2.1",
@@ -15,7 +16,11 @@
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-logger": "^3.2.0",
-    "koa-router": "^7.4.0"
+    "koa-router": "^7.4.0",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.37.10",
+    "sequelize-cli-esm": "^5.0.6"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
