@@ -6,10 +6,12 @@ import cors from '@koa/cors';
 import config from './config/app';
 import router from './routes/index';
 import db from './models/index';
+import errorMiddlware from './errors/middleware';
 
 const app = new Koa();
 app.db = db;
 
+app.use(errorMiddlware);
 app.use(logger());
 app.use(cors());
 app.use(bodyParser());

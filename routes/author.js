@@ -24,7 +24,7 @@ router.get('/', async (ctx) => {
 
 router.get('/:id', async (ctx) => {
   const id = ctx.params.id;
-  const author = await ctx.app.db.Author.findById(id);
+  const author = await ctx.app.db.Author.findOrFail(id);
 
   ctx.body = { data: serialize(author) };
 });
@@ -41,7 +41,7 @@ router.post('/', async (ctx) => {
 router.patch('/:id', async (ctx) => {
   const attrs = ctx.request.body.data.attributes;
   const id = ctx.params.id;
-  const author = await ctx.app.db.Author.findById(id);
+  const author = await ctx.app.db.Author.findOrFail(id);
 
   author.set(attrs);
   await author.save();
@@ -51,7 +51,7 @@ router.patch('/:id', async (ctx) => {
 
 router.del('/:id', async (ctx) => {
   const id = ctx.params.id;
-  const author = await ctx.app.db.Author.findById(id);
+  const author = await ctx.app.db.Author.findOrFail(id);
   await author.destroy();
 
   ctx.status = 204;
