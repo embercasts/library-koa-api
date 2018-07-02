@@ -26,8 +26,7 @@ router.get('/:id/book', async (ctx) => {
 });
 
 router.post('/', async (ctx) => {
-  const attrs = ctx.request.body.data.attributes;
-  attrs.BookId = ctx.request.body.data.relationships.book.data.id;
+  const attrs = ctx.getAttributes();
 
   const review = await ctx.app.db.Review.create(attrs);
 
@@ -35,8 +34,7 @@ router.post('/', async (ctx) => {
 });
 
 router.patch('/:id', async (ctx) => {
-  const attrs = ctx.request.body.data.attributes;
-  attrs.BookId = ctx.request.body.data.relationships.book.data.id;
+  const attrs = ctx.getAttributes();
 
   const id = ctx.params.id;
   const review = await ctx.app.db.Review.findOrFail(id);

@@ -39,7 +39,7 @@ router.get('/:id/books', async (ctx) => {
 });
 
 router.post('/', async (ctx) => {
-  const attrs = ctx.request.body.data.attributes;
+  const attrs = ctx.getAttributes();
   const author = await ctx.app.db.Author.create(attrs);
 
   ctx.status = 201;
@@ -48,7 +48,7 @@ router.post('/', async (ctx) => {
 });
 
 router.patch('/:id', async (ctx) => {
-  const attrs = ctx.request.body.data.attributes;
+  const attrs = ctx.getAttributes();
   const id = ctx.params.id;
   const author = await ctx.app.db.Author.findOrFail(id);
 
