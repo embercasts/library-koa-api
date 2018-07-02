@@ -1,11 +1,13 @@
 import author from './author';
 import book from './book';
 import review from './review';
+import user from './user';
 
 const resources = {
   author,
   book,
-  review
+  review,
+  user
 };
 
 export default function serialize(type, model) {
