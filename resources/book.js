@@ -15,6 +15,11 @@ export default (model) => {
         links: {
           related: `/books/${model.id}/author`
         }
+      },
+      reviews: {
+        links: {
+          related: `/books/${model.id}/reviews`
+        }
       }
     }
   };

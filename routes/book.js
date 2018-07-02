@@ -39,6 +39,15 @@ router.get('/:id/author', async (ctx) => {
   ctx.body = ctx.app.serialize('author', author);
 });
 
+router.get('/:id/reviews', async (ctx) => {
+  const id = ctx.params.id;
+  const book = await ctx.app.db.Book.findOrFail(id);
+
+  const reviews = await book.getReviews();
+
+  ctx.body = ctx.app.serialize('review', reviews);
+});
+
 router.post('/', async (ctx) => {
   const attrs = ctx.request.body.data.attributes;
   attrs.AuthorId = ctx.request.body.data.relationships.author.data.id;
