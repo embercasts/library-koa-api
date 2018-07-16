@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import currentUser from '../middleware/current-user';
 
 const router = new Router();
+const includeUser = { include: ['User'] };
 
 router.get('/', async (ctx) => {
   const query = ctx.query['filter[query]'];
@@ -15,10 +16,11 @@ router.get('/', async (ctx) => {
           { title: { [Sequelize.Op.iLike]: `%${query}%` } },
           { isbn: { [Sequelize.Op.iLike]: `%${query}%` } },
         ]
-      }
+      },
+      ...includeUser
     });
   } else {
-    books = await ctx.app.db.Book.findAll();
+    books = await ctx.app.db.Book.findAll(includeUser);
   }
 
   ctx.body = ctx.app.serialize('book', books);
@@ -26,7 +28,7 @@ router.get('/', async (ctx) => {
 
 router.get('/:id', async (ctx) => {
   const id = ctx.params.id;
-  const book = await ctx.app.db.Book.findOrFail(id);
+  const book = await ctx.app.db.Book.findOrFail(id, includeUser);
 
   ctx.body = ctx.app.serialize('book', book);
 });
@@ -35,7 +37,7 @@ router.get('/:id/author', async (ctx) => {
   const id = ctx.params.id;
   const book = await ctx.app.db.Book.findOrFail(id);
 
-  const author = await book.getAuthor();
+  const author = await book.getAuthor(includeUser);
 
   ctx.body = ctx.app.serialize('author', author);
 });
@@ -44,7 +46,7 @@ router.get('/:id/reviews', async (ctx) => {
   const id = ctx.params.id;
   const book = await ctx.app.db.Book.findOrFail(id);
 
-  const reviews = await book.getReviews();
+  const reviews = await book.getReviews(includeUser);
 
   ctx.body = ctx.app.serialize('review', reviews);
 });
@@ -54,6 +56,7 @@ router.post('/', currentUser, async (ctx) => {
   attrs.UserId = ctx.currentUser.id;
 
   const book = await ctx.app.db.Book.create(attrs);
+  book.User = ctx.currentUser;
 
   ctx.body = ctx.app.serialize('book', book);
 });
@@ -62,7 +65,7 @@ router.patch('/:id', async (ctx) => {
   const attrs = ctx.getAttributes();
 
   const id = ctx.params.id;
-  const book = await ctx.app.db.Book.findOrFail(id);
+  const book = await ctx.app.db.Book.findOrFail(id, includeUser);
 
   book.set(attrs);
   await book.save();

@@ -3,7 +3,7 @@ export default (model) => {
     type: 'reviews',
     id: model.id,
     attributes: {
-      user: model.user,
+      username: model.User.username,
       body: model.body,
       'created-at': model.createdAt
     },

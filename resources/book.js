@@ -3,6 +3,7 @@ export default (model) => {
     type: 'books',
     id: model.id,
     attributes: {
+      username: model.User.username,
       title: model.title,
       isbn: model.isbn,
       'publish-date': model.publishDate
