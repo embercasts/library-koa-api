@@ -8,6 +8,7 @@ const createModel = (sequelize, DataTypes) => {
   Book.associate = function(models) {
     Book.belongsTo(models.Author);
     Book.hasMany(models.Review);
+    Book.belongsTo(models.User);
   };
   return Book;
 };

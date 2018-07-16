@@ -1,21 +1,24 @@
 export default {
   async up(queryInterface, Sequelize) {
-    /*
-      Add altering commands here.
-      Await any promises to handle asynchronicity.
+    await queryInterface.addColumn('Authors', 'UserId', {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    });
 
-      Example:
-      return  await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+    await queryInterface.addColumn('Books', 'UserId', {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    /*
-      Add reverting commands here.
-      Await any promises to handle asynchronicity.
-
-      Example:
-      return  await queryInterface.dropTable('users');
-    */
+    await queryInterface.removeColumn('Authors', 'UserId');
+    await queryInterface.removeColumn('Books', 'UserId');
   }
 };

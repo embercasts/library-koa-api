@@ -1,5 +1,6 @@
 import Router from 'koa-router';
 import Sequelize from 'sequelize';
+import currentUser from '../middleware/current-user';
 
 const router = new Router();
 
@@ -38,9 +39,12 @@ router.get('/:id/books', async (ctx) => {
   ctx.body = ctx.app.serialize('book', books);
 });
 
-router.post('/', async (ctx) => {
+router.post('/', currentUser, async (ctx) => {
   const attrs = ctx.getAttributes();
+  attrs.UserId = ctx.currentUser.id;
   const author = await ctx.app.db.Author.create(attrs);
+
+  debugger
 
   ctx.status = 201;
   ctx.set('Location', `/authors/${author.id}`);
