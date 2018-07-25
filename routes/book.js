@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import Sequelize from 'sequelize';
 import currentUser from '../middleware/current-user';
+import ForbiddenError from '../errors/forbidden';
 
 const router = new Router();
 const includeUser = { include: ['User'] };
@@ -61,11 +62,15 @@ router.post('/', currentUser, async (ctx) => {
   ctx.body = ctx.app.serialize('book', book);
 });
 
-router.patch('/:id', async (ctx) => {
+router.patch('/:id', currentUser, async (ctx) => {
   const attrs = ctx.getAttributes();
 
   const id = ctx.params.id;
   const book = await ctx.app.db.Book.findOrFail(id, includeUser);
+
+  if (ctx.currentUser.id !== book.UserId) {
+    throw new ForbiddenError();
+  }
 
   book.set(attrs);
   await book.save();
@@ -73,9 +78,14 @@ router.patch('/:id', async (ctx) => {
   ctx.body = ctx.app.serialize('book', book);
 });
 
-router.del('/:id', async (ctx) => {
+router.del('/:id', currentUser, async (ctx) => {
   const id = ctx.params.id;
   const book = await ctx.app.db.Book.findOrFail(id);
+
+  if (ctx.currentUser.id !== book.UserId) {
+    throw new ForbiddenError();
+  }
+
   await book.destroy();
 
   ctx.status = 204;

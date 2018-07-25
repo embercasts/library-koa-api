@@ -2,6 +2,7 @@ import NotFoundError from './not-found';
 import { ValidationError, UniqueConstraintError } from 'sequelize';
 import { underscore, dasherize } from 'inflected';
 import UnauthorizedError from './unauthorized';
+import ForbiddenError from './forbidden';
 
 export default async (ctx, next) => {
   try {
@@ -17,6 +18,18 @@ export default async (ctx, next) => {
               code: 404,
               title: 'Not Found',
               detail: `${err.modelName} not found with the id '${err.id}'`
+            }
+          ]
+        };
+      case ForbiddenError:
+        ctx.status = 403;
+
+        return ctx.body = {
+          errors: [
+            {
+              status: 403,
+              title: 'Forbidden',
+              detail: 'User does not have access to edit this resource'
             }
           ]
         };
